@@ -25,7 +25,7 @@ import functools
 
 
 def _has_flag(v: int, f: int) -> bool:
-    return True if v & f else False
+    return bool(v & f)
 
 
 class UserFlags:

@@ -69,8 +69,7 @@ class Guild(Thing):
                 GuildFeature.guild_id == self._id
             ).all()
 
-            for feature in iterg:
-                self._features.append(feature.name)
+            self._features.extend(feature.name for feature in iterg)
 
     def create_feature(self, name: str) -> None:
         GuildFeature.create(
@@ -101,24 +100,22 @@ class Guild(Thing):
         return self
 
     def for_transmission(self) -> dict:
-        ret = {}
+        ret = {
+            'id': str(self._id),
+            'name': self._name,
+            'description': self._description,
+            'icon': self._icon,
+            'banner': self._banner,
+            'nsfw': self._nsfw,
+            'verified': self._verified,
+            'owner': self._owner.for_transmission(),
+        }
 
-        ret['id'] = str(self._id)
-        ret['name'] = self._name
-        ret['description'] = self._description
-        ret['icon'] = self._icon
-        ret['banner'] = self._banner
-        ret['nsfw'] = self._nsfw
-        ret['verified'] = self._verified
-        ret['owner'] = self._owner.for_transmission()  # type: ignore
+
         ret['features'] = self._features
         ret['_version'] = self.version
 
-        if self._permissions is None:
-            ret['permissions'] = 0
-        else:
-            ret['permissions'] = self._permissions
-
+        ret['permissions'] = 0 if self._permissions is None else self._permissions
         return ret
 
     def commit(self):
