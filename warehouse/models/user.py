@@ -147,9 +147,7 @@ class User:
     def from_authorization(cls, token: str, version: int) -> "User":
         tokeninfo = verify_token(token=token)
 
-        self = cls.from_id(tokeninfo.id, version=version)
-
-        return self
+        return cls.from_id(tokeninfo.id, version=version)
 
     def create_token(self):
         return create_token(self._id)  # type: ignore
@@ -205,17 +203,19 @@ class User:
 
         self._db = self._db.update(**d)
 
-        for k, v in d.keys():
-            setattr(self, '_' + k, v)
+        for k, v in d:
+            setattr(self, f'_{k}', v)
 
     def for_transmission(self, remove_email: bool = True):
-        dict_return = {}
+        dict_return = {
+            'id': str(self._id),
+            'username': self._username,
+            'discriminator': self._discriminator,
+            'avatar': self._avatar,
+            'banner': self._banner,
+        }
 
-        dict_return['id'] = str(self._id)
-        dict_return['username'] = self._username
-        dict_return['discriminator'] = self._discriminator
-        dict_return['avatar'] = self._avatar
-        dict_return['banner'] = self._banner
+
         if not remove_email:
             dict_return['email'] = self._email
         dict_return['joined_at'] = self._joined_at
@@ -228,7 +228,7 @@ class User:
         return dict_return
 
     @classmethod
-    def gendiscrim(self, username: str):
+    def gendiscrim(cls, username: str):
         discriminator: str | None = None
 
         for _ in range(600):

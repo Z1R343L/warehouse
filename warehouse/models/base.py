@@ -32,7 +32,7 @@ class Thing:
     _exists: bool
 
     @classmethod
-    def from_id(self) -> "Thing":
+    def from_id(cls) -> "Thing":
         ...
 
     def for_transmission(self) -> dict[str, Any]:

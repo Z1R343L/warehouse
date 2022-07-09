@@ -47,10 +47,11 @@ load_dotenv()
 debug = os.getenv('DEBUG')
 
 app = FastAPI(
-    debug=True if debug == 'true' else False,
+    debug=debug == 'true',
     openapi_url=None,
     default_response_class=ORJSONResponse,
 )
+
 
 # Routes: users
 app.include_router(users.users)
