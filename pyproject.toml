@@ -16,7 +16,7 @@ reportMissingTypeStubs = false
 reportPrivateUsage = false
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = "^3.8"
 cassandra-driver = "^3.25.0"
 bcrypt = "^3.2.2"
 fastapi = "^0.78.0"
